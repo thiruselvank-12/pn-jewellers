@@ -1,0 +1,221 @@
+# PN Jewellers — Implementation Plan
+
+## Overview
+
+Build a luxury jewelry eCommerce platform inspired by Bluestone and Malabar Gold. The project consists of a **React (Vite) frontend** and a **Laravel 11 REST API backend**, connected to MySQL. The frontend uses Tailwind CSS, Framer Motion, React Three Fiber, and Zustand for state management.
+
+> [!IMPORTANT]
+> This is a large project. We will build **Phase 1–3 (frontend-first)** to get a working, visually stunning frontend with mock data, then layer in the Laravel backend in Phase 5. This lets us iterate on the UX rapidly.
+
+---
+
+## Phase 1: Project Setup & Design System
+
+### Frontend Scaffold
+
+#### [NEW] `frontend/` — Vite + React + Tailwind project
+
+Scaffolded via `npx -y create-vite@latest ./ --template react`. Then install:
+
+- `tailwindcss @tailwindcss/vite` (v4)
+- `framer-motion`
+- `@react-three/fiber @react-three/drei three`
+- `zustand`
+- `react-router-dom`
+- `react-icons`
+
+#### Folder structure
+
+```
+frontend/
+├── src/
+│   ├── components/     # Reusable UI (Button, Card, Badge, Navbar, Footer)
+│   ├── features/       # Feature modules (cart, auth, wishlist, checkout)
+│   ├── pages/          # Route-level pages (Home, Listing, Product, Cart, Checkout, Account)
+│   ├── hooks/          # Custom hooks (useScrollReveal, useParallax, use3DViewer)
+│   ├── services/       # API service layer
+│   ├── store/          # Zustand stores (cart, auth, ui)
+│   ├── assets/         # Images, GLB models, HDR maps
+│   ├── styles/         # Global CSS, design tokens
+│   └── data/           # Mock product/category data (used until backend is ready)
+```
+
+#### [NEW] Design System — `src/styles/index.css`
+
+Tailwind v4 `@theme` block defining:
+
+| Token | Value |
+|---|---|
+| `--color-primary` | `#2C2C2C` |
+| `--color-gold` | `#D4AF37` |
+| `--color-white` | `#FFFFFF` |
+| `--color-bg` | `#F8F8F8` |
+| `--font-heading` | `Playfair Display` |
+| `--font-body` | `Inter` |
+| `--font-accent` | `Montserrat` |
+
+Plus utility classes for gold shimmer animation, smooth transitions, and glassmorphism effects.
+
+---
+
+## Phase 2: Homepage & 3D Hero
+
+### [NEW] `src/components/Navbar.jsx`
+Sticky transparent navbar with gold logo, nav links, cart/wishlist/user icons. Backdrop blur on scroll.
+
+### [NEW] `src/components/Footer.jsx`
+Multi-column footer with links, social icons, newsletter, copyright.
+
+### [NEW] `src/pages/Home.jsx`
+Full homepage composed of section components:
+
+### [NEW] `src/components/home/HeroSection.jsx`
+- Fullscreen 3D scene using React Three Fiber
+- Floating jewelry model (torus knot / ring geometry as placeholder until real GLB loaded)
+- Slow auto-rotation + mouse-based parallax
+- Metallic gold material with environment reflections
+- Overlay text: "Timeless Elegance, Crafted for You" + CTA button
+
+### [NEW] `src/components/home/FeaturedCollections.jsx`
+- Horizontal scrollable carousel
+- Product cards with hover tilt (CSS transform perspective) + gold shimmer overlay
+
+### [NEW] `src/components/home/CategoryTiles.jsx`
+- Grid of 4 category tiles (Rings, Chains, Earrings, Bridal)
+- Generated images for each tile
+- Hover zoom + gold border reveal
+
+### [NEW] `src/components/home/TrustBadges.jsx`
+- Row of badges: BIS Hallmark, 100% Certified, Free Shipping, Easy Returns
+
+### [NEW] `src/components/home/Testimonials.jsx`
+- Carousel of customer testimonials with star ratings
+
+### [NEW] `src/components/home/Newsletter.jsx`
+- Email capture with gold-accented input + CTA
+
+---
+
+## Phase 3: Product Experience
+
+### [NEW] `src/pages/ProductListing.jsx`
+- Grid of product cards
+- Sidebar filters: price range, metal type, stone, category
+- Sort dropdown: price (low/high), popularity, newest
+- Animated card entrance (staggered fade-up)
+
+### [NEW] `src/pages/ProductDetail.jsx`
+- Split layout: left = 3D viewer / image gallery, right = product info
+- 3D Viewer component (React Three Fiber):
+  - Drag to rotate (OrbitControls)
+  - Scroll to zoom
+  - Lighting preset buttons (Studio / Warm / Daylight)
+  - Metallic + gem shader materials
+- Product customization: metal type, stone type, size dropdowns
+- Price display with customization-based updates
+- Trust section: certifications, return policy badge, star reviews
+
+### [NEW] `src/components/product/ProductCard.jsx`
+- Reusable card with image, name, price, wishlist icon
+- 3D hover tilt + gold shimmer border
+
+### [NEW] `src/components/product/Viewer3D.jsx`
+- Standalone 3D viewer component with OrbitControls, HDR environment, lighting presets
+
+### [NEW] `src/components/product/ImageGallery.jsx`
+- Thumbnails + main image with zoom-on-hover
+
+---
+
+## Phase 4: eCommerce Flow
+
+### [NEW] `src/store/cartStore.js` (Zustand)
+- Add/remove/update items, persistent via `localStorage`
+
+### [NEW] `src/store/authStore.js` (Zustand)
+- User auth state, token management
+
+### [NEW] `src/store/wishlistStore.js` (Zustand)
+- Wishlist management with `localStorage` persistence
+
+### [NEW] `src/pages/Cart.jsx`
+- Cart items list with quantity controls, remove button
+- Price summary with subtotal → tax → total
+- "Proceed to Checkout" CTA
+
+### [NEW] `src/pages/Checkout.jsx`
+- Multi-step form: Address → Payment → Confirmation
+- Step indicator with progress bar
+- Payment integration placeholder (Razorpay/Stripe ready)
+
+### [NEW] `src/pages/Account.jsx`
+- Profile info, order history, wishlist view
+
+### [NEW] `src/pages/Login.jsx` / `src/pages/Register.jsx`
+- Auth forms with validation, gold-accented inputs
+
+---
+
+## Phase 5: Backend (Laravel 11)
+
+### [NEW] `backend/` — Laravel 11 project
+
+#### Database Schema (MySQL)
+
+| Table | Key Columns |
+|---|---|
+| `users` | id, name, email, password, phone, address_json |
+| `products` | id, name, slug, description, base_price, category_id, metal_type, stone_type, images_json, model_3d_url, is_featured |
+| `categories` | id, name, slug, image_url |
+| `cart_items` | id, user_id, product_id, quantity, metal_option, stone_option, size |
+| `orders` | id, user_id, total, status, address_json, payment_id |
+| `order_items` | id, order_id, product_id, quantity, price, options_json |
+| `reviews` | id, user_id, product_id, rating, comment |
+| `wishlists` | id, user_id, product_id |
+
+#### REST API Endpoints
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| POST | `/api/register` | User registration |
+| POST | `/api/login` | User login (token) |
+| GET | `/api/products` | List products (filterable) |
+| GET | `/api/products/{slug}` | Product detail |
+| GET | `/api/categories` | List categories |
+| GET/POST/DELETE | `/api/cart` | Cart CRUD |
+| POST | `/api/orders` | Place order |
+| GET | `/api/orders` | User order history |
+| GET/POST | `/api/reviews` | Reviews CRUD |
+| GET/POST/DELETE | `/api/wishlist` | Wishlist CRUD |
+
+---
+
+## Phase 6: Polish & Performance
+
+- Add Framer Motion page transitions (AnimatePresence)
+- Lazy load 3D models with `React.lazy` + Suspense
+- Image optimization (WebP, lazy loading)
+- Code splitting per route
+- Mobile touch gestures for 3D viewer
+- Final responsive QA on mobile/tablet/desktop
+
+---
+
+## Verification Plan
+
+### Browser-Based Visual Testing (per phase)
+
+After each phase, we will launch the dev server (`npm run dev`) and use the browser tool to:
+
+1. **Phase 1**: Verify the app starts without errors, Tailwind tokens are applied
+2. **Phase 2**: Verify homepage renders — 3D hero visible, all sections present, animations fire on scroll
+3. **Phase 3**: Navigate to product listing — filters work, card hover effects visible; navigate to product detail — 3D viewer interactive, customization dropdowns update price
+4. **Phase 4**: Add items to cart — verify persistence on refresh; walk through checkout steps; test auth forms
+5. **Phase 5**: Connect frontend to backend APIs — verify data flows end-to-end
+6. **Phase 6**: Lighthouse audit for performance; responsive testing at 375px, 768px, 1440px widths
+
+### Manual Verification (User)
+
+- After Phase 2: User reviews homepage look-and-feel for luxury aesthetic approval
+- After Phase 4: User tests full purchase flow (add to cart → checkout)
+- After Phase 6: User tests on mobile device for touch interaction quality

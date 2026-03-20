@@ -1,0 +1,42 @@
+# PN Jewellers — Luxury Jewelry eCommerce Platform
+
+## Phase 1: Project Setup & Design System
+- [ ] Initialize React (Vite) frontend project with Tailwind CSS
+- [ ] Set up design system (colors, typography, tokens)
+- [ ] Configure Framer Motion, React Three Fiber, Zustand
+- [ ] Create folder structure (`components/`, `pages/`, `features/`, `hooks/`, `services/`)
+
+## Phase 2: Homepage & 3D Hero
+- [ ] Build fullscreen 3D hero section (floating jewelry, parallax, reflections)
+- [ ] Featured Collections carousel
+- [ ] Category tiles (Rings, Chains, Earrings, Bridal)
+- [ ] Trust badges section
+- [ ] Testimonials section
+- [ ] Newsletter signup section
+- [ ] Navbar + Footer
+
+## Phase 3: Product Experience
+- [ ] Product listing page with filters & sorting
+- [ ] Product detail page with 3D viewer (360° rotation, zoom, lighting presets)
+- [ ] Product customization (metal, stone, size)
+- [ ] Image gallery (multi-angle)
+- [ ] Trust builders (certs, returns, reviews)
+
+## Phase 4: eCommerce Flow
+- [ ] Cart (persistent, real-time pricing)
+- [ ] Multi-step checkout (address → payment → confirm)
+- [ ] User auth system (login/register)
+- [ ] Wishlist
+- [ ] Order tracking / Account page
+
+## Phase 5: Backend (Laravel 11)
+- [ ] Laravel project setup
+- [ ] Database schema design (MySQL)
+- [ ] REST API: Auth, Products, Orders, Cart, Reviews
+- [ ] Validation & security
+
+## Phase 6: Polish & Performance
+- [ ] Micro-interactions (tilt, shimmer, transitions)
+- [ ] Lazy loading (3D models, images, code splitting)
+- [ ] Mobile-first responsiveness
+- [ ] Final QA pass
